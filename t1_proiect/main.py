@@ -1,74 +1,71 @@
-import numpy as np
 import pandas as pd
+
+# Încărcați setul de date
+df = pd.read_csv('SensorML_small.csv', parse_dates=['Timestamp'], dayfirst=True)
+
+# Eliminați punctele din numerele cu virgulă mobilă
+df.replace(regex=True, inplace=True, to_replace=r'\.', value='')
+
+# Convertiți coloana Timestamp în format dată
+df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+
+# Afișați primele rânduri ale setului de date
+print(df.head())
+
 import matplotlib.pyplot as plt
-import plotly.express as px
 import seaborn as sns
 
-# Importați datele
-df = pd.read_csv("SensorML_small.csv")
+# Setați stilul pentru grafice
+sns.set(style="whitegrid")
 
-# Histograme
-for col in df.columns:
-    plt.figure(figsize=(10, 6))
-    plt.hist(df[col], label=col)
-    plt.title(f"Distribuția {col}")
-    plt.legend()
+# Funcție pentru a crea analiza univariată
+def univariate_analysis(parameter):
+    plt.figure(figsize=(12, 6))
+
+    # Histograma
+    plt.subplot(2, 2, 1)
+    sns.histplot(df[parameter], kde=True, color='skyblue')
+    plt.title(f'Histograma pentru {parameter}')
+
+    # Seria temporală
+    plt.subplot(2, 2, 2)
+    sns.lineplot(x='Timestamp', y=parameter, data=df, color='orange')
+    plt.title(f'Seria temporală pentru {parameter}')
+    plt.xticks(rotation=45)
+
+    # Boxplot
+    plt.subplot(2, 2, 3)
+    sns.boxplot(x=df[parameter], color='lightcoral')
+    plt.title(f'Boxplot pentru {parameter}')
+
+    # Cumulativ
+    plt.subplot(2, 2, 4)
+    sns.histplot(df[parameter], kde=True, cumulative=True, stat="density", common_norm=False, color='lightgreen')
+    plt.title(f'Histogramă cumulativă pentru {parameter}')
+
+    plt.tight_layout()
     plt.show()
 
-# Boxploturi
-for col in df.columns:
-    plt.figure(figsize=(10, 6))
-    plt.boxplot(df[col])
-    plt.xlabel(col)
-    plt.ylabel("Valoare")
-    plt.show()
+# Apelați funcția pentru fiecare parametru
+parameters = ['pres', 'temp1', 'umid', 'temp2', 'V450', 'B500', 'G550', 'Y570', 'O600', 'R650', 'temps1', 'temps2', 'lumina']
+for parameter in parameters:
+    univariate_analysis(parameter)
 
-# Heatmap-uri
-for col in df.columns:
-    fig = px.imshow(
-        df.groupby("Timestamp")[col].mean().to_numpy(),
-        color_continuous_scale="viridis",
-    )
-    fig.update_layout(title=f"{col} pe parcursul zilei")
-    fig.show()
-
-# Calculați matricea de corelație
-corr = df.corr()
-
-# Afișați matricea de corelație
-fig = sns.heatmap(
-    corr,
-    vmin=-1,
-    vmax=1,
-    annot=True,
-    cmap="Reds",
-    linewidths=0.5,
-    linecolor="white",
-)
-fig.set_title("Matricea de corelație")
-fig.show()
-
-# Creați modelul Prophet
-from prophet import Prophet
-
-# Creați modelul Prophet
-m = Prophet()
-
-# Antrenați modelul
-m.fit(df)
-
-# Creați un dataframe pentru predicții
-future = m.make_future_dataframe(periods=48, freq="H")
-
-# Generați predicții
-forecast = m.predict(future)
-
-# Plotați predicțiile
-fig = m.plot(forecast)
-plt.xlabel("Oră")
-plt.ylabel("Temperatură")
+# Crearea unui heatmap pentru valorile medii
+plt.figure(figsize=(12, 8))
+sns.heatmap(df.groupby(df['Timestamp'].dt.date).mean(), annot=True, cmap='coolwarm')
+plt.title('Heatmap pentru valorile medii pe zi')
 plt.show()
 
-# Calculați eroarea la antrenare
-mse = np.mean((forecast["yhat"] - df["y"])**2)
-print("MSE:", mse)
+# Crearea unui heatmap pentru valorile mediane
+plt.figure(figsize=(12, 8))
+sns.heatmap(df.groupby(df['Timestamp'].dt.date).median(), annot=True, cmap='coolwarm')
+plt.title('Heatmap pentru valorile mediane pe zi')
+plt.show()
+
+# Crearea boxplot-urilor pentru identificarea outlierelor și distribuției valorilor
+plt.figure(figsize=(16, 10))
+sns.boxplot(data=df.drop(['Timestamp'], axis=1), palette='pastel')
+plt.title('Boxplot-uri pentru identificarea outlierelor și a distribuției valorilor')
+plt.xticks(rotation=45)
+plt.show()
