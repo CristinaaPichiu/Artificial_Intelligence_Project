@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from prophet import Prophet
-from prophet.diagnostics import cross_validation
+from prophet.diagnostics import cross_validation, performance_metrics
+
 
 def load_and_clean_data(file_path):
     # Încărcați setul de date
@@ -16,7 +17,7 @@ def load_and_clean_data(file_path):
     df[numeric_columns] = df[numeric_columns].replace(',', '', regex=True).astype(float)
 
     # Convertiți coloana Timestamp în format dată
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%m/%d/%Y %H:%M', errors='coerce')
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
 
     # Eliminați rândurile care au valori nule în orice coloană
     df = df.dropna(how='any')
@@ -28,12 +29,7 @@ def load_and_clean_data(file_path):
 
 
 def plot_mean_heatmaps(df):
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%m/%d/%Y %H:%M', errors='coerce')
-
-    # Eliminăm potențialele valori lipsă sau zero-size arrays
-    df = df.dropna(subset=['Timestamp'])
-    df = df[df['Timestamp'].notna()]
-
+    # Verificare dacă dataframe-ul conține date valide
     if df.empty:
         print("Nu există date valide pentru afișarea heatmap-ului.")
         return
@@ -46,35 +42,35 @@ def plot_mean_heatmaps(df):
 
 
 def plot_median_heatmaps(df):
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%m/%d/%Y %H:%M', errors='coerce')
-
-    # Eliminăm potențialele valori lipsă sau zero-size arrays
-    df = df.dropna(subset=['Timestamp'])
-    df = df[df['Timestamp'].notna()]
-
+    # Verificare dacă dataframe-ul conține date valide
     if df.empty:
         print("Nu există date valide pentru afișarea heatmap-ului.")
         return
 
-    # Depanare: Afișăm informații despre dataframe înainte de heatmap
-    print("DataFrame info before creating heatmap:")
-    print(df.head())
+    # Eliminarea coloana 'Timestamp' pentru a asigura doar date numerice
+    df_numeric = df.drop(['Timestamp'], axis=1)
 
-    # Crearea unui heatmap pentru valorile mediane
-    plt.figure(figsize=(12, 8))
-    median_heatmap = df.groupby([df['Timestamp'].dt.date, df['Timestamp'].dt.hour]).median().unstack()
+    # Verificare și conversie la tip datetime
+    if not pd.api.types.is_datetime64_any_dtype(df['Timestamp']):
+        df['Timestamp'] = pd.to_datetime(df['Timestamp'], errors='coerce')
 
-    # Resetăm MultiIndex
-    median_heatmap = median_heatmap.reset_index()
+    # Eliminarea rândurilor care conțin NaN
+    df_numeric = df_numeric.dropna()
 
-    # Adăugăm coloanele
-    median_heatmap.columns = ['Ora'] + list(median_heatmap.columns[1:])
+    # Crearea unui heatmap pentru valorile mediane pe zi
+    median_heatmap = df_numeric.groupby(df['Timestamp'].dt.date).median()
 
-    # Afișăm heatmap-ul
-    sns.heatmap(median_heatmap.set_index('Ora'), annot=True, cmap='coolwarm', fmt=".2f")
-    plt.title('Heatmap pentru valorile mediane pe zi și oră')
-    plt.ylabel('Zi')
-    plt.xlabel('Ora')
+    # Ajustarea dimensiunii figurii pentru a evita suprapunerea valorilor
+    plt.figure(figsize=(14, 10))
+
+    # Crearea heatmap-ului cu anotări și formatarea valorilor
+    sns.heatmap(median_heatmap, annot=True, cmap='coolwarm', fmt=".0f", annot_kws={"size": 8})
+
+    # Ajustarea etichetelor axelor
+    plt.xticks(rotation=45, ha='right')
+    plt.yticks(rotation=0)
+
+    plt.title('Heatmap pentru valorile mediane pe zi')
     plt.show()
 
 
@@ -96,11 +92,15 @@ def plot_correlation_matrix(df):
     plt.title('Matrice de corelație')
     plt.show()
 
+
 def train_prophet_models(df):
     prophet_models = {}
     for parameter in df.columns[1:]:  # Excludem prima coloana 'Timestamp'
         # Creează un dataframe pentru antrenare
         train_data = df[['Timestamp', parameter]].rename(columns={'Timestamp': 'ds', parameter: 'y'})
+
+        # Converteste timestamp-urile la formatul corect
+        train_data['ds'] = pd.to_datetime(train_data['ds'], unit='ns')
 
         # Inițializare și antrenare model
         model = Prophet(yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
@@ -122,6 +122,8 @@ def train_prophet_models(df):
         plt.show()
 
     return prophet_models
+
+
 
 def plot_actual_vs_predicted(df, forecast, parameter):
     # Realizați grafice care indică valorile predicțiilor realizate de model în paralel cu valorile actuale
@@ -155,9 +157,49 @@ def perform_cross_validation(model, initial, period, horizon):
     plt.legend()
     plt.show()
 
+
+def train_prophet_models(df):
+    prophet_models = {}
+    for parameter in df.columns[1:]:  # Excludem prima coloana 'Timestamp'
+        # Creează un dataframe pentru antrenare
+        train_data = df[['Timestamp', parameter]].rename(columns={'Timestamp': 'ds', parameter: 'y'})
+
+        # Converteste 'ds' la formatul de datetime cu unit='ns'
+        train_data['ds'] = pd.to_datetime(train_data['ds'], unit='ns')
+
+        # Inițializare și antrenare model
+        model = Prophet(yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
+        model.fit(train_data)
+
+        prophet_models[parameter] = model
+
+        # Crearea unui dataframe pentru predictie
+        future = model.make_future_dataframe(periods=48, freq='H')  # 48 de ore înainte
+        future['ds'] = pd.to_datetime(future['ds'], unit='ns')  # Converteste si 'ds' pentru dataframe-ul de predictie
+        forecast = model.predict(future)
+
+        # Afișare grafic cu predicțiile
+        fig = model.plot(forecast)
+        plt.title(f'Prophet Predictions for {parameter}')
+        plt.show()
+
+        # Afișare eroare la antrenare utilizând cross-validare
+        fig = model.plot_components(forecast)
+        plt.show()
+
+    return prophet_models
+
+
 # Apelarea funcțiilor
 file_path = 'SensorML_small.csv'
 df = load_and_clean_data(file_path)
+#print(df.head())
+#print(df.dtypes)
+#print(df.columns)
+#print(df.isnull().sum())
+
+#plot_correlation_matrix(df)
+
 
 # 1. Analiza univariată
 plot_mean_heatmaps(df)
