@@ -6,20 +6,20 @@ from prophet.diagnostics import cross_validation, performance_metrics
 
 
 def load_and_clean_data(file_path):
-    # Încărcați setul de date
+    # Încărcăm setul de date
     df = pd.read_csv(file_path, parse_dates=['Timestamp'], dayfirst=False)
 
-    # Eliminați punctele și spațiile din numerele cu virgulă mobilă
+    # Eliminăm punctele și spațiile din numerele cu virgulă mobilă
     df.replace(regex=True, inplace=True, to_replace=[r'\.', r' '], value='')
 
     numeric_columns = ['pres', 'temp1', 'umid', 'temp2', 'V450', 'B500', 'G550', 'Y570', 'O600', 'R650', 'temps1',
                        'temps2', 'lumina']
     df[numeric_columns] = df[numeric_columns].replace(',', '', regex=True).astype(float)
 
-    # Convertiți coloana Timestamp în format dată
+    # Convertim coloana Timestamp în format dată
     df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
 
-    # Eliminați rândurile care au valori nule în orice coloană
+    # Eliminăm rândurile care au valori nule în orice coloană
     df = df.dropna(how='any')
 
     # Conversia datelor la tip numeric
@@ -82,21 +82,10 @@ def plot_boxplots(df):
     plt.xticks(rotation=45)
     plt.show()
 
-def plot_correlation_matrix(df):
-    # Determinați matricea de corelație
-    correlation_matrix = df.corr()
-
-    # Afișați matricea de corelație
-    plt.figure(figsize=(12, 8))
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
-    plt.title('Matrice de corelație')
-    plt.show()
-
-
 def train_prophet_models(df):
     prophet_models = {}
     for parameter in df.columns[1:]:  # Excludem prima coloana 'Timestamp'
-        # Creează un dataframe pentru antrenare
+        # Creearea unui dataframe pentru antrenare
         train_data = df[['Timestamp', parameter]].rename(columns={'Timestamp': 'ds', parameter: 'y'})
 
         # Converteste timestamp-urile la formatul corect
@@ -124,7 +113,6 @@ def train_prophet_models(df):
     return prophet_models
 
 
-
 def plot_actual_vs_predicted(df, forecast, parameter):
     # Realizați grafice care indică valorile predicțiilor realizate de model în paralel cu valorile actuale
     plt.figure(figsize=(16, 6))
@@ -137,12 +125,12 @@ def plot_actual_vs_predicted(df, forecast, parameter):
     plt.show()
 
 def perform_cross_validation(model, initial, period, horizon):
-    # Specificați perioada de predictie și frecvența
+    # Specificăm perioada de predictie și frecvența
     initial = str(initial) + ' hours'
     period = str(period) + ' hours'
     horizon = str(horizon) + ' hours'
 
-    # Realizare cross-validation
+    # Realizarea cross-validation
     df_cv = cross_validation(model, initial=initial, period=period, horizon=horizon)
 
     # Afișare erori
@@ -158,54 +146,15 @@ def perform_cross_validation(model, initial, period, horizon):
     plt.show()
 
 
-def train_prophet_models(df):
-    prophet_models = {}
-    for parameter in df.columns[1:]:  # Excludem prima coloana 'Timestamp'
-        # Creează un dataframe pentru antrenare
-        train_data = df[['Timestamp', parameter]].rename(columns={'Timestamp': 'ds', parameter: 'y'})
-
-        # Converteste 'ds' la formatul de datetime cu unit='ns'
-        train_data['ds'] = pd.to_datetime(train_data['ds'], unit='ns')
-
-        # Inițializare și antrenare model
-        model = Prophet(yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
-        model.fit(train_data)
-
-        prophet_models[parameter] = model
-
-        # Crearea unui dataframe pentru predictie
-        future = model.make_future_dataframe(periods=48, freq='H')  # 48 de ore înainte
-        future['ds'] = pd.to_datetime(future['ds'], unit='ns')  # Converteste si 'ds' pentru dataframe-ul de predictie
-        forecast = model.predict(future)
-
-        # Afișare grafic cu predicțiile
-        fig = model.plot(forecast)
-        plt.title(f'Prophet Predictions for {parameter}')
-        plt.show()
-
-        # Afișare eroare la antrenare utilizând cross-validare
-        fig = model.plot_components(forecast)
-        plt.show()
-
-    return prophet_models
-
-
 # Apelarea funcțiilor
 file_path = 'SensorML_small.csv'
 df = load_and_clean_data(file_path)
-#print(df.head())
-#print(df.dtypes)
-#print(df.columns)
-#print(df.isnull().sum())
 
-#plot_correlation_matrix(df)
+# 1. Heatmaps + Boxplot
 
-
-# 1. Analiza univariată
 plot_mean_heatmaps(df)
 plot_median_heatmaps(df)
 plot_boxplots(df)
-plot_correlation_matrix(df)
 
 # 2. Antrenarea modelelor Prophet
 prophet_models = train_prophet_models(df)
