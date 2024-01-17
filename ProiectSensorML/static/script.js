@@ -1,18 +1,28 @@
+var myChart = null;
+function createDataArray(selectedParameter) {
+    var dataArray = [];
+    for (var i = 0; i < 24; i++) {
+        dataArray.push({
+            temperature: selectedParameter === 'temp1' ? 3 : 0,
+            humidity: selectedParameter === 'umid' ? 25 : 0,
+            light: 23,   // Aceste valori pot fi ajustate în funcție de necesități
+            pressure: 98,
+            soil_moisture: 213
+        });
+    }
+    return dataArray;
+}
+
 function updateChart() {
     var selectedParameter = document.getElementById("parameter").value;
+    var dataToSend = createDataArray(selectedParameter);
 
     fetch('/predict', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            temperature: selectedParameter === 'temp1' ? 1 : 0,
-            humidity: selectedParameter === 'umid' ? 1 : 0,
-            light: 0,
-            pressure: 0,
-            soil_moisture: 0
-        })
+        body: JSON.stringify(dataToSend)
     })
     .then(response => response.json())
     .then(predictions => {
@@ -24,6 +34,9 @@ function updateChart() {
 function drawChart(predictions) {
     var ctx = document.getElementById('sensorChart').getContext('2d');
 
+    if (chart) {
+        chart.destroy();  // Distrugerea instanței graficului existent
+    }
     var chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -38,10 +51,10 @@ function drawChart(predictions) {
         },
         options: {
             scales: {
-                x: [{
+                x: {
                     type: 'linear',
                     position: 'bottom'
-                }]
+                }
             }
         }
     });

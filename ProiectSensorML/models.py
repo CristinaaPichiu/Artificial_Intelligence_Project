@@ -6,10 +6,18 @@ import joblib
 
 # Funcție pentru prelucrarea și normalizarea datelor
 def preprocess_data(file_path):
+    # Încărcarea datelor din CSV
     sensor_data = pd.read_csv(file_path, index_col='Timestamp', parse_dates=True)
+
+    # Selectează doar primele 5 coloane, presupunând că acestea sunt caracteristicile relevante
+    selected_columns = sensor_data.iloc[:, :5]  # Schimbă această linie dacă coloanele relevante sunt diferite
+
+    # Aplicarea MinMaxScaler pe coloanele selectate
     scaler = MinMaxScaler()
-    sensor_data_normalized = scaler.fit_transform(sensor_data)
+    sensor_data_normalized = scaler.fit_transform(selected_columns)
+
     return sensor_data_normalized, scaler
+
 
 # Funcție pentru crearea secvențelor
 def create_sequences(data, input_sequence_length, output_sequence_length):
@@ -54,13 +62,25 @@ class Seq2SeqModel:
         self.model.save(model_path)
 
     def load(self, model_path):
-        return tf.keras.models.load_model(model_path)
+        self.model = tf.keras.models.load_model(model_path)
+        print(self.model.summary())
+        return self.model
 
     def predict(self, X):
         # Asigură-te că X are forma corectă
-        X = np.expand_dims(X, axis=1)  # Adaugă dimensiunea secvenței (1) între None și 5
+        if X.ndim == 2:
+            X = np.reshape(X, (1, X.shape[0], X.shape[1]))  # Transformă (24, 5) în (1, 24, 5)
+
         decoder_input = np.zeros((X.shape[0], self.output_sequence_length, self.output_dim))
         predictions = self.model.predict([X, decoder_input])
         return predictions
 
-# Funcții suplimentare (dacă sunt necesare) pentru vizualizarea predicțiilor, evaluarea modelului etc.
+
+if __name__ == '__main__':
+    data, scaler = preprocess_data('SensorMLDataset.csv')
+    X, y = create_sequences(data, 24, 24)
+
+    model = Seq2SeqModel(24, 24, 5, 5)
+    model.train(X, y)
+    model.save('model.keras')
+    joblib.dump(scaler, 'scaler.pkl')
