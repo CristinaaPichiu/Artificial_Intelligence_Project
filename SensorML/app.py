@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from SensorML.seq2seq import function_Seq2Seq, return_pathSeq2Seq
 from read_csv import load_and_clean_data
 from retele_neuronale import function_LSTM, return_path
 import base64
@@ -45,9 +47,8 @@ def generate_plot():
         parameter_type = request.form['parameter_type']
         return redirect(url_for('show_chart_RN', parameter_type=parameter_type))
     elif plot_type == 'Seq2Seq':
-        # Generare și afișare grafic de tip linie
-        img = generate_line_chart(df)
-        return render_template('image.html', image_data=img)
+        parameter_type = request.form['parameter_type']
+        return redirect(url_for('show_chart_Seq2Seq', parameter_type=parameter_type))
 
     # Adaugă aici condiții pentru alte tipuri de grafice
 
@@ -62,6 +63,16 @@ def show_chart_RN(parameter_type):
     image_path = "images/"+return_path(parameter_type)
     print(image_path)
     return render_template('image.html', image_path=image_path)
+@app.route('/show_chart_Seq2Seq/<parameter_type>', methods=['GET'])
+def show_chart_Seq2Seq(parameter_type):
+    file_path = 'SensorMLDataset.csv'
+    df = load_and_clean_data(file_path)
+    # Apelarea funcției pentru valoarea primită a parameter_type în contextul Seq2Seq
+    image_path = "images/"+return_pathSeq2Seq(parameter_type)
+    print(image_path)
+    return render_template('image.html', image_path=image_path)
+
+
 
 @app.route('/show_chart', methods=['GET'])
 def show_chart():
