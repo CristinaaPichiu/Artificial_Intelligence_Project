@@ -100,7 +100,6 @@ def function_Seq2Seq(df, column):
 
 def return_pathSeq2Seq(column):
     directory = 'static/images'  # Setează directorul în care dorești să cauți
-
     # Parcurge fișierele din directorul specificat
     for filename in os.listdir(directory):
         if filename.startswith(column) and filename.endswith("seq2seq.png"):
