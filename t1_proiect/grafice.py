@@ -32,7 +32,7 @@ def plot_mean_heatmaps(df):
         print("Nu există date valide pentru afișarea heatmap-ului.")
         return
     print(df.corr())
-    # Crearea unui heatmap simplu pentru valorile din dataframe
+    # Crearea unui heatmap                                                                                          simplu pentru valorile din dataframe
     plt.figure(figsize=(12, 8))
     sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
     plt.title('Heatmap pentru corelația dintre variabile')
@@ -156,6 +156,7 @@ if __name__ =="__main__":
 
      plot_median_heatmaps(df)
      plot_boxplots(df)
+
     #
     # # 3. Antrenarea modelelor Prophet
      prophet_models = train_prophet_models(df)
@@ -165,7 +166,7 @@ if __name__ =="__main__":
          future = model.make_future_dataframe(periods=48, freq='H')
          forecast = model.predict(future)
          plot_actual_vs_predicted(df, forecast, parameter)
-    #
-     for parameter, model in prophet_models.items():
-         perform_cross_validation(model, initial=7*24, period=2*24, horizon=2*24)
 
+     # for parameter, model in prophet_models.items():
+     #     perform_cross_validation(model, initial=7*24, period=2*24, horizon=2*24)
+     #

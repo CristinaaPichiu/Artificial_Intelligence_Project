@@ -24,7 +24,7 @@ def load_and_clean_data(file_path):
     # print(df[numeric_columns])
     # Convertim coloana Timestamp în format dată
     df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%Y-%m-%d %H:%M:%S',
-                                     errors='coerce')  #########################
+                                     errors='coerce')
 
     # Eliminăm rândurile care au valori nule în orice coloană
     df = df.dropna(how='any')
@@ -57,25 +57,33 @@ def index():
     file_path = 'SensorML_small.csv'
     df = load_and_clean_data(file_path)
     return render_template('index.html')
-
 @app.route('/generate_plot', methods=['POST'])
 def generate_plot():
     file_path = 'SensorML_small.csv'
     df = load_and_clean_data(file_path)
 
+    model_selected = request.form['model']  # This is the new part where you capture the selected model
     plot_type = request.form['plot_type']
 
-    if plot_type == 'heatmap':
-        return redirect(url_for('show_chart'))
+    # Based on the selected model, you could adjust your data processing or plotting logic
+    #if model_selected == 'static':
+        # Apply static model logic here
+    #elif model_selected == 'neural':
+        # Apply neural network logic here
+    #elif model_selected == 'seq2seq':
+        # Apply Seq2Seq model logic here
 
-    elif plot_type == 'line':
-        # Generare și afișare grafic de tip linie
-        img = generate_line_chart(df)
-        return render_template('image.html', image_data=img)
+    # Now, based on the plot type, you generate the plot
+    # if plot_type == 'heatmap':
+        # Assuming you have a function to handle heatmap for different models
+        #img = generate_heatmap_based_on_model(df, model_selected)
+       ## return render_template('image.html', image_data=img)
+    #elif plot_type == 'line':
+        # Assuming you have a function to handle line chart for different models
+        #img = generate_line_chart_based_on_model(df, model_selected)
+    # return render_template('image.html', image_data=img)
 
-
-
-    # Adaugă aici condiții pentru alte tipuri de grafice
+    # Handle other plot types if necessary
 
     return redirect(url_for('index'))
 
@@ -115,9 +123,6 @@ def generate_line_chart(df):
     data = base64.b64encode(buf.getbuffer()).decode("ascii")
 
     return f"data:image/png;base64,{data}"
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

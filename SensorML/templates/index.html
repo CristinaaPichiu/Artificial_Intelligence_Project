@@ -16,22 +16,24 @@
 
     <div class="container">
         <br>
-        <!-- Formular pentru alegerea parametrilor de mediu -->
-       <form action="/generate_plot" method="post">
-    <fieldset>
-        <legend>Select Parameters for Visualization</legend><br>
+        <form action="/generate_plot" method="post">
+            <fieldset>
+<!--        <legend>Select Method for Visualization</legend><br>-->
         <div class="form-group">
-            <label for="plot_type">Select Plot Type:</label>
-            <select class="form-control" name="plot_type" id="plot_type">
-                <option value="line">Line Chart</option>
-                <option value="bar">Bar Chart</option>
-                <option value="heatmap">Heatmap</option>
-                <!-- Adaugă alte opțiuni aici -->
+            <label for="method_type">Select Method for Visualization:</label>
+            <select class="form-control" name="plot_type" id="method_type">
+                 <option value="" hidden disabled selected>Choose a method</option>
+                <option value="Prophet">Static method</option>
+                <option value="RN">Neural network method</option>
+                <option value="Seq2Seq">Seq2Seq method </option>
             </select>
         </div>
+                <div id="parameter-dropdown-placeholder"></div>
+
         <button type="submit" class="btn btn-primary">Generate Chart</button>
     </fieldset>
 </form>
+
 
 
         <!-- Container pentru grafic -->
@@ -40,10 +42,9 @@
         </div>
     </div>
 
-    <!-- JavaScript și Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../static/script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
