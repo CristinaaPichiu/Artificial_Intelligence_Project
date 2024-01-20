@@ -8,7 +8,6 @@ $(document).ready(function() {
                 <div class="form-group">
                     <label for="parameter_type">Select Parameter for Visualization:</label>
                     <select class="form-control" name="parameter_type" id="parameter_type">
-                        <option value="Timestamp">Timestamp</option>
                         <option value="pres">Pressure</option>
                         <option value="temp1">Temperature 1</option>
                         <option value="temp2">Temperature 2</option>
@@ -29,7 +28,6 @@ $(document).ready(function() {
                     <label for="parameter_type">Select Parameter for Visualization:</label>
                     <select class="form-control" name="parameter_type" id="parameter_type">
                         <!-- Opțiunile pentru Seq2Seq -->
-                        <option value="Timestamp">Timestamp</option>
                         <option value="pres">Pressure</option>
                         <option value="temp1">Temperature 1</option>
                         <option value="temp2">Temperature 2</option>

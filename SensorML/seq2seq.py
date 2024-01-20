@@ -1,18 +1,20 @@
 import os
+
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-from SensorML.read_csv import load_and_clean_data
+from read_csv import load_and_clean_data
+
 
 # Funcție pentru crearea secvențelor
 def create_sequences(data, input_sequence_length, output_sequence_length):
     X, y = [], []
     for i in range(len(data) - input_sequence_length - output_sequence_length + 1):
-        X.append(data[i:(i + input_sequence_length), :])  # Modificare aici
-        y.append(data[(i + input_sequence_length):(i + input_sequence_length + output_sequence_length), :])  # Modificare aici
+        X.append(data[i:(i + input_sequence_length), 0])  # Modificare aici
+        y.append(data[(i + input_sequence_length):(i + input_sequence_length + output_sequence_length)])
     return np.array(X), np.array(y)
 
 def function_Seq2Seq(df, column):
@@ -31,8 +33,8 @@ def function_Seq2Seq(df, column):
     X, y = create_sequences(data_normalized, input_sequence_length, output_sequence_length)
 
     # Dimensiunile input și output
-    input_dim = 1  # Modificare aici, deoarece avem o singură caracteristică (coloană) în datele de intrare
-    output_dim = 1  # Modificare aici
+    input_dim = 24  # Modificare aici
+    output_dim = y.shape[2]
 
     # Encoder
     encoder_inputs = tf.keras.layers.Input(shape=(input_sequence_length, input_dim))
@@ -95,6 +97,7 @@ def function_Seq2Seq(df, column):
 
     return image_path
 
+
 def return_pathSeq2Seq(column):
     directory = 'static/images'  # Setează directorul în care dorești să cauți
     # Parcurge fișierele din directorul specificat
@@ -104,10 +107,12 @@ def return_pathSeq2Seq(column):
 
     return None  # Întoarce None dacă nu se găsește fișierul
 
+
 if __name__ == '__main__':
     # Încărcarea și curățarea datelor
     file_path = 'SensorMLDataset.csv'
     df = load_and_clean_data(file_path)
-    numeric_columns = ['pres', 'temp1', 'umid', 'temp2', 'V450', 'B500', 'G550', 'Y570', 'O600', 'R650', 'temps1', 'temps2', 'lumina']
+    numeric_columns = ['pres', 'temp1', 'umid', 'temp2', 'V450', 'B500', 'G550', 'Y570', 'O600', 'R650', 'temps1',
+                       'temps2', 'lumina']
     for column in numeric_columns:
-        function_Seq2Seq(df, column)
+        function_Seq2Seq(df,column)

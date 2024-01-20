@@ -3,7 +3,7 @@ from prophet import Prophet
 import matplotlib.pyplot as plt
 import os
 
-from SensorML.read_csv import load_and_clean_data
+from read_csv import load_and_clean_data
 
 
 def plot_actual_vs_predicted(df, forecast, parameter):

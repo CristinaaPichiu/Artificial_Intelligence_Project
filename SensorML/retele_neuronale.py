@@ -81,7 +81,7 @@ def function_LSTM(df, column):
     return image_path
 
 
-def return_path(column):
+def return_path_RN(column):
     directory = 'static/images'  # Setează directorul în care dorești să cauți
 
     # Parcurge fișierele din directorul specificat
