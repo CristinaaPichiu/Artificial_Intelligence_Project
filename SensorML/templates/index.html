@@ -12,13 +12,16 @@
         <span class="navbar-brand mb-0 h1">Sensor Data Visualization</span>
     </nav>
 
-    <!-- Container pentru imagine și buton -->
-    <div class="image-container text-center"> <!-- Clasa text-center de la Bootstrap pentru a centra butonul -->
-        <img src="../static/images/SensorML.png" alt="banner">
-        <div class="centered-btn">
-            <button onclick="window.location.href='/disease'" class="disease-btn"> Conditii optime de dezvoltare a bolilor </button>
-            <button onclick="window.location.href='/models'" class="models-btn"> Evolutie parametri de mediu in timp</button>
-            <button onclick="window.location.href='/prediction'" class="prediction-btn"> Riscul de boala </button>
+    <div class="container mt-4"> <!-- Adăugat clasa container și margin top -->
+        <div class="row">
+            <div class="col-12 text-center"> <!-- Clasa col-12 pentru full width pe toate dispozitivele -->
+                <img src="../static/images/SensorML.png" alt="banner" class="img-fluid"> <!-- Clasa img-fluid pentru a face imaginea responsive -->
+                <div class="centered-btn">
+                    <button onclick="window.location.href='/disease'" class="btn disease-btn my-2">Conditii optime de dezvoltare a bolilor</button>
+                    <button onclick="window.location.href='/models'" class="btn models-btn my-2">Evolutie parametri de mediu in timp</button>
+                    <button onclick="window.location.href='/prediction'" class="btn prediction-btn my-2">Riscul de boala</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
