@@ -4,6 +4,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/grafice.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <title>Sensor Data Visualization - Graphic</title>
 </head>
 <body>
@@ -15,7 +16,7 @@
     <div class="image-container text-center"> <!-- Clasa text-center de la Bootstrap pentru a centra butonul -->
         <img src="{{ url_for('static', filename=image_path) }}" alt="Generated Chart">
         <div class="centered-btn">
-            <button onclick="window.location.href='/'" class="back-btn">&#8592; Înapoi</button>
+            <button onclick="window.location.href='/'" class="back-btn"> Home</button>
         </div>
     </div>
 </body>

@@ -1,0 +1,35 @@
+
+.image-container {
+    margin-top: 0; /* Ajustați după necesitate */
+    display: flex; /* Folosiți Flexbox pentru a centra butoanele */
+    justify-content: center; /* Centrează butoanele orizontal */
+}
+
+.centered-btn {
+    margin-top: 50px; /* Ajustează acesta pentru a adăuga spațiu între imagine și buton */
+    display: inline; /* Utilizați Flexbox pentru a aranja butoanele */
+    flex-direction: column; /* Aranjează butoanele în coloană */
+    align-items: center; /* Centrează butoanele vertical */
+}
+
+/* Stilizarea butonului */
+.disease-btn, .models-btn, .prediction-btn {
+    border: none;
+    background-color: #007bff; /* Culoare albastră Bootstrap */
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    margin: 20px 8px;
+    transition-duration: 0.4s;
+    border-radius: 12px; /* Buton rotunjit */
+}
+
+/* Stil pentru hover efect */
+.disease-btn:hover, .models-btn:hover, .prediction-btn:hover {
+    background-color: #0056b3; /* Culoare mai închisă la hover */
+    color: white;
+}
