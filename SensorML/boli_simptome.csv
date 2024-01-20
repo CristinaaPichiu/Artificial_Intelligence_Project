@@ -1,0 +1,17 @@
+Disease,Affected Part,Intensity,Texture,Color,Pattern,Anatomical Region,Shape,Border Color
+LateBlight,Leaf,WeakToModerate,damp,lightGreen,blotchy,apicalSuperiorRegion ,irregular,
+LateBlight,Leaf,Strong,dampAndWrinkled,brown,blotchy,superiorSide,irregular,lightGreen
+LateBlight,Leaf,SevereToFatal,dampAndWrinkled,purpleBrown,blotchy,superiorSide ,irregular,greenBrown
+LateBlight,Stem,StrongToFatal,damp,darkBrown,blotchy,,irregular,
+LateBlight,Fruit,SevereToFatal,dryAndRough,darkRedBrown,blotchy,basalToCentralRegion ,irregular,darkRedBrown
+EarlyBlight,Leaf,WeakToModerate,damp,yellowGreen,spotted,,circular ,yellowGreen
+EarlyBlight,Leaf,StrongToFatal,damp,yellow,spotted,,circular ,yellow
+EarlyBlight,Stem,StrongToFatal,damp,black,blotchy,,elliptic,
+EarlyBlight,Fruit,SevereToFatal,dryAndRough,darkBrown,blotchy,basalToCentralRegion ,ringShape,
+PowderyMilldew,Leaf,Alllntensities,chalky,yellowWhite,blotchy,,irregular,
+GrayMold,Leaf,Alllntensities,chalky,greenGrey,blotchy,apicalSuperiorRegion ,vShape,
+GrayMold,Stem,Alllntensities,wilted,greenGrey,blotchy,,elliptic,
+GrayMold,Fruit,WeakToModerate,smooth,white,spotted,,ringShape,
+GrayMold,Fruit,StrongToFatal,,darkGrey,blotchy,basalToCentralRegion ,irregular,
+LeafMold,Leaf,Alllntensities,,yellow,blotchy,superiorSide ,irregular,
+LeafMold,Leaf,Alllntensities,,yellowBrown,blotchy,inferiorSide ,irregular,
