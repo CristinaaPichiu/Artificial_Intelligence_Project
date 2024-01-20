@@ -1,9 +1,13 @@
+import pickle
+
+import joblib
+import pandas as pd
 from flask import Flask, render_template, request, redirect, url_for
 from prophet_file import return_path_prophet
 from seq2seq import return_pathSeq2Seq
 from retele_neuronale import return_path_RN
 
-
+model = joblib.load('model_rosii_bolnave.pkl')
 app = Flask(__name__)
 
 
@@ -21,10 +25,39 @@ def models():
 def prediction():
     return render_template('prediction.html')
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Collect form data
+    input_data = {
+        'Affected Part': request.form.get('AffectedPart'),
+        'Intensity': request.form.get('Intensity'),
+        'Texture': request.form.get('Texture'),
+        'Color': request.form.get('Color'),
+        'Pattern': request.form.get('Pattern'),
+        'Anatomical Region': request.form.get('AnatomicalRegion'),
+        'Shape': request.form.get('Shape'),
+        'Border Color': request.form.get('BorderColor')
+    }
+
+    print("Received a POST request")
+
+    # Convert form data to DataFrame
+    df = pd.DataFrame([input_data])
+
+    # Predict using the model
+    prediction = model.predict(df)
+
+    # Set variables for template rendering
+    selected_attributes = input_data
+    disease = 'Există un risc ridicat de boală la roșii.' if prediction == 1 else 'Riscul de boală la roșii este scăzut.'
+
+    # Render the template with the variables
+    return render_template('prediction.html', selected_attributes=selected_attributes, disease=disease)
+
 
 @app.route('/disease')
 def diseases():
-    return re   nder_template('disease.html')
+    return render_template('disease.html')
 
 
 # Functie pentru afisarea graficelelor pt diseases:

@@ -1,147 +1,147 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/prediction.css">
     <title>Sensor Data Visualization</title>
-
 </head>
-    <body>
+
+<body>
 
     <nav class="navbar navbar-dark bg-dark">
         <span class="navbar-brand mb-0 h1">Sensor Data Visualization</span>
     </nav>
-<div class="container">
+    <div class="container">
 
-
-    <form method="post" class="form">
-        <div class="form-group">
-            <label for="AffectedPart" class="form-label">Affected Part:</label>
-            <select name="AffectedPart" class="form-control">
-             <option value="" hidden disabled selected>Choose an affected part</option>
-            <option value="Leaf">Leaf</option>
-            <option value="Stem">Stem</option>
-            <option value="Fruit">Fruit</option>
-        </select>
-        </div>
-
-        <!-- Intensity Dropdown -->
-        <div class="form-group">
-        <label for="Intensity" class="form-label">Intensity:</label>
-        <select name="Intensity" class="form-control">
-            <option value="" hidden disabled selected>Choose an intensity</option>
-            <option value="AllIntensities">All Intensities</option>
-            <option value="SevereToFatal">Severe to Fatal</option>
-            <option value="Strong">Strong</option>
-            <option value="StrongToFatal">Strong to Fatal</option>
-            <option value="WeakToModerate">Weak to Moderate</option>
-        </select>
-         </div>
-
-
-                        <div class="form-group">
-
-        <label for="Texture" class="form-label">Texture:</label>
-        <select name="Texture" class="form-control">
-            <option value="" hidden disabled selected>Choose a texture</option>
-            <option value="chalky">Chalky</option>
-            <option value="damp">Damp</option>
-            <option value="dampAndWrinkled">Damp and Wrinkled</option>
-            <option value="dryAndRough">Dry and Rough</option>
-            <option value="smooth">Smooth</option>
-            <option value="wilted">Wilted</option>
-        </select>
-                    </div>
-
-        <!-- Color Dropdown -->
-                                <div class="form-group">
-
-        <label for="Color" class="form-label">Color:</label>
-        <select name="Color" class="form-control">
-            <option value="" hidden disabled selected>Choose a color</option>
-            <option value="black">Black</option>
-            <option value="brown">Brown</option>
-            <option value="DarkBrown">Dark brown</option>
-            <option value="DarkGrey">Dark grey</option>
-            <option value="DarkRedBrown">Dark red brown</option>
-            <option value="GreenGrey">Green grey</option>
-            <option value="LightGreen">Light green</option>
-            <option value="PurpleBrown">Purple brown</option>
-            <option value="White">White</option>
-            <option value="Yellow">Yellow</option>
-            <option value="YellowBrown">Yellow brown</option>
-            <option value="YellowGreen">Yellow green</option>
-            <option value="YellowWhite">Yellow white</option>
-        </select>
-        </div>
-
-<div class="form-group">
-        <label for="Pattern" class="form-label">Pattern:</label>
-        <select name="Pattern" class="form-control">
-            <option value="" hidden disabled selected>Choose a pattern</option>
-            <option value="blotchy">Blotchy</option>
-            <option value="spotted">Spotted</option>
-        </select>
-                                                                </div>
-
-
-        <!-- Anatomical Region Dropdown -->
-                                                <div class="form-group">
-
-        <label for="AnatomicalRegion" class="form-label">Anatomical Region:</label>
-        <select name="AnatomicalRegion" class="form-control">
-            <option value="" hidden disabled selected>Choose a region</option>
-            <option value="apicalSuperiorRegion">Apical Superior Region</option>
-            <option value="basalToCentralRegion">Basal to Central Region</option>
-            <option value="inferiorSide">Inferior Side</option>
-            <option value="superiorSide">Superior Side</option>
-        </select>
-                                                                </div>
-
-        <!-- Shape Dropdown -->
-    <div class="form-group">
-
-        <label for="Shape" class="form-label">Shape:</label>
-        <select name="Shape" class="form-control">
-            <option value="" hidden disabled selected>Choose a shape</option>
-            <option value="circular">Circular</option>
-            <option value="eliptic">Eliptic</option>
-            <option value="irregular">Irregular</option>
-            <option value="ringShape">Ring Shape</option>
-            <option value="vShape">V Shape</option>
-        </select>
-         </div>
-
-
-        <!-- Border Color Dropdown -->
+<form method="post" class="form" action="/predict">
             <div class="form-group">
+                <label for="AffectedPart" class="form-label">Affected Part:</label>
+                <select id="AffectedPart" name="AffectedPart" class="form-control">
+                    <option value="" hidden disabled selected>Choose an affected part</option>
+                    <option value="Leaf">Leaf</option>
+                    <option value="Stem">Stem</option>
+                    <option value="Fruit">Fruit</option>
+                </select>
+            </div>
 
-        <label for="BorderColor" class="form-label">Border Color:</label>
-        <select name="BorderColor" class="form-control">
-            <option value="" hidden disabled selected>Choose a border color</option>
-            <option value="lightGreen">Light Green</option>
-            <option value="greenBrown">Green Brown</option>
-            <option value="darkRedBrown">Dark Red Brown</option>
-            <option value="yellowGreen">Yellow Green</option>
-            <option value="yellow">Yellow</option>
-        </select>
-                         </div>
+            <!-- Intensity Dropdown -->
+            <div class="form-group">
+                <label for="Intensity" class="form-label">Intensity:</label>
+                <select id="Intensity" name="Intensity" class="form-control">
+                    <option value="" hidden disabled selected>Choose an intensity</option>
+                    <option value="AllIntensities">All Intensities</option>
+                    <option value="SevereToFatal">Severe to Fatal</option>
+                    <option value="Strong">Strong</option>
+                    <option value="StrongToFatal">Strong to Fatal</option>
+                    <option value="WeakToModerate">Weak to Moderate</option>
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="Texture" class="form-label">Texture:</label>
+                <select id="Texture" name="Texture" class="form-control">
+                    <option value="" hidden disabled selected>Choose a texture</option>
+                    <option value="chalky">Chalky</option>
+                    <option value="damp">Damp</option>
+                    <option value="dampAndWrinkled">Damp and Wrinkled</option>
+                    <option value="dryAndRough">Dry and Rough</option>
+                    <option value="smooth">Smooth</option>
+                    <option value="wilted">Wilted</option>
+                </select>
+            </div>
 
-        <input type="submit" value="Predict Disease" class="form-submit">
-    </form>
+            <!-- Color Dropdown -->
+            <div class="form-group">
+                <label for="Color" class="form-label">Color:</label>
+                <select id="Color" name="Color" class="form-control">
+                    <option value="" hidden disabled selected>Choose a color</option>
+                    <option value="black">Black</option>
+                    <option value="brown">Brown</option>
+                    <option value="DarkBrown">Dark brown</option>
+                    <option value="DarkGrey">Dark grey</option>
+                    <option value="DarkRedBrown">Dark red brown</option>
+                    <option value="GreenGrey">Green grey</option>
+                    <option value="LightGreen">Light green</option>
+                    <option value="PurpleBrown">Purple brown</option>
+                    <option value="White">White</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="YellowBrown">Yellow brown</option>
+                    <option value="YellowGreen">Yellow green</option>
+                    <option value="YellowWhite">Yellow white</option>
+                </select>
+            </div>
 
-    <!-- The following section will be filled by the server-side template rendering -->
+            <div class="form-group">
+                <label for="Pattern" class="form-label">Pattern:</label>
+                <select id="Pattern" name="Pattern" class="form-control">
+                    <option value="" hidden disabled selected>Choose a pattern</option>
+                    <option value="blotchy">Blotchy</option>
+                    <option value="spotted">Spotted</option>
+                </select>
+            </div>
+
+            <!-- Anatomical Region Dropdown -->
+            <div class="form-group">
+                <label for="AnatomicalRegion" class="form-label">Anatomical Region:</label>
+                <select id="AnatomicalRegion" name="AnatomicalRegion" class="form-control">
+                    <option value="" hidden disabled selected>Choose a region</option>
+                    <option value="apicalSuperiorRegion">Apical Superior Region</option>
+                    <option value="basalToCentralRegion">Basal to Central Region</option>
+                    <option value="inferiorSide">Inferior Side</option>
+                    <option value="superiorSide">Superior Side</option>
+                </select>
+            </div>
+
+            <!-- Shape Dropdown -->
+            <div class="form-group">
+                <label for="Shape" class="form-label">Shape:</label>
+                <select id="Shape" name="Shape" class="form-control">
+                    <option value="" hidden disabled selected>Choose a shape</option>
+                    <option value="circular">Circular</option>
+                    <option value="eliptic">Eliptic</option>
+                    <option value="irregular">Irregular</option>
+                    <option value="ringShape">Ring Shape</option>
+                    <option value="vShape">V Shape</option>
+                </select>
+            </div>
+
+            <!-- Border Color Dropdown -->
+            <div class="form-group">
+                <label for="BorderColor" class="form-label">Border Color:</label>
+                <select id="BorderColor" name="BorderColor" class="form-control">
+                    <option value="" hidden disabled selected>Choose a border color</option>
+                    <option value="lightGreen">Light Green</option>
+                    <option value="greenBrown">Green Brown</option>
+                    <option value="darkRedBrown">Dark Red Brown</option>
+                    <option value="yellowGreen">Yellow Green</option>
+                    <option value="yellow">Yellow</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Predict Disease" class="form-submit">
+        </form>
+
+        <!-- The following section will be filled by the server-side template rendering -->
+        <div>
+ <!-- The following section will be filled by the server-side template rendering -->
+   <!-- The following section will be filled by the server-side template rendering -->
+<div>
     {% if selected_attributes %}
-        <div class="result">
-
+    <div class="result">
         <h2>Selected Attributes:</h2>
         <!-- Display selected attributes -->
+        <ul>
+            {% for key, value in selected_attributes.items() %}
+                <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
         <h2>Predicted Disease:</h2>
         <p>{{ disease }}</p>
-                </div>
-    {% endif %}
     </div>
-
+    {% endif %}
+</div>
+</div>
+    </div>
 </body>
 </html>

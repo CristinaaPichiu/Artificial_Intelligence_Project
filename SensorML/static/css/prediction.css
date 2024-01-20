@@ -7,27 +7,26 @@ body {
     align-items: center;
     flex-direction: column;
 }
-.title {
-    color: #333;
-    margin-bottom: 20px;
-}
+
 .form {
     background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     margin-bottom: 20px;
-    margin-left:50px;
     width: 100%;
-    max-width: 600px; /* Adjust as per your design */
+    max-width: 600px;
 }
+
 .form-group {
     margin-bottom: 20px;
 }
-.form-label {
+
+.form-label, .form-submit {
     display: block;
     margin-bottom: 5px;
 }
+
 .form-control {
     width: 100%;
     padding: 10px;
@@ -35,6 +34,7 @@ body {
     border: 1px solid #ddd;
     background-color: #fff;
 }
+
 .form-submit {
     padding: 10px 20px;
     border-radius: 5px;
@@ -42,39 +42,47 @@ body {
     background-color: #5cb85c;
     color: white;
     cursor: pointer;
-    display: block;
     width: 100%;
     margin-top: 20px;
 }
+
 .form-submit:hover {
     background-color: #4cae4c;
 }
+
 .result {
     text-align: center;
     padding: 20px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-.navbar {
-    width: 100%; /* This ensures the navbar takes the full width of the viewport */
-    margin-bottom: 0; /* Remove any margin below the navbar */
+    margin-left: 100px;
 }
 
-/* If you want to adjust the height or the font-size based on your preference: */
-.navbar {
-    height: 102px; /* Adjust the height as per your design requirement */
-    font-size: 15px; /* Adjust the font size as per your design requirement */
-}
-
-/* Make sure the container class is not adding any unwanted padding or margin */
 .container {
     width: 100%;
-    max-width: none; /* This will ensure that container width is not restricted */
-    padding: 0; /* Adjust padding if needed */
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: row;
+    padding: 20px;
+    margin-left: auto;
 }
 
-/* You can also add this to ensure any padding inside the navbar is removed */
+.col {
+    flex: 1;
+    padding: 10px;
+}
+
+#prediction-result {
+    max-width: 400px;
+}
+
+.navbar {
+    width: 100%;
+    margin-bottom: 0;
+}
+
 .navbar-brand {
     padding: 0;
 }
