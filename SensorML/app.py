@@ -24,7 +24,7 @@ def prediction():
 
 @app.route('/disease')
 def diseases():
-    return render_template('disease.html')
+    return re   nder_template('disease.html')
 
 
 # Functie pentru afisarea graficelelor pt diseases:
