@@ -6,8 +6,7 @@ from keras.layers import LSTM, Dense, Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from read_csv import load_and_clean_data
-import base64
-from io import BytesIO
+
 
 # Funcție pentru a crea seturi de date de intrare și ieșire
 def create_dataset(dataset, time_step):
@@ -22,17 +21,14 @@ def create_dataset(dataset, time_step):
 def function_LSTM(df, column):
     # Extrage coloana pentru predicție
     data = df[column].values.reshape(-1, 1)
-
     # Normalizează datele
     scaler = MinMaxScaler(feature_range=(0, 1))
     data_normalized = scaler.fit_transform(data)
-
     # Crearea seturilor de date de antrenare și test
     train_data, test_data = train_test_split(data_normalized, test_size=0.2, shuffle=False)
-
     # Crearea seturilor de date pentru antrenare și testare
     # Parametrii modelului
-    time_step = 5
+    time_step = 25
     n_features = 1
 
     # Crearea seturilor de antrenare și test
@@ -44,10 +40,12 @@ def function_LSTM(df, column):
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], n_features)
 
     # Construirea modelului LSTM
-    model = Sequential()
-    model.add(LSTM(50, return_sequences=True, input_shape=(time_step, n_features)))
-    model.add(LSTM(50, return_sequences=False))
-    model.add(Dense(1))
+    model = Sequential()  # lista secventiala de straturi
+    model.add(LSTM(50, return_sequences=True, input_shape=(time_step, n_features)))  # va returna secvențe complete
+    # de ieșiri pentru fiecare element din secvență (și nu doar ieșirea de la ultimul pas de timp)
+    model.add(LSTM(50, return_sequences=False)) # doar ultima ieșire din secvență, pregătind datele pentru stratul
+    # de ieșire.
+    model.add(Dense(1)) # folosit pentru predicția unei singure valori continue
 
     # Compilarea modelului
     model.compile(optimizer='adam', loss='mean_squared_error')
@@ -68,7 +66,7 @@ def function_LSTM(df, column):
     plt.plot(scaler.inverse_transform(data_normalized), label='Datele Originale')
     plt.plot(np.arange(time_step, len(train_predict) + time_step), train_predict, label='Predicții Antrenare')
     plt.plot(np.arange(len(train_predict) + (2 * time_step) + 1, len(data_normalized) - 1), test_predict,
-         label='Predicții Test')
+             label='Predicții Test')
     plt.title(f'Predicția Parametrilor pentru {column}')
     plt.xlabel('Timp')
     plt.ylabel(f'Valoarea Parametrului pentru {column}')
@@ -98,5 +96,6 @@ if __name__ == '__main__':
     df = load_and_clean_data(file_path)
     numeric_columns = ['pres', 'temp1', 'umid', 'temp2', 'V450', 'B500', 'G550', 'Y570', 'O600', 'R650', 'temps1',
                        'temps2', 'lumina']
+
     for column in numeric_columns:
         function_LSTM(df,column)

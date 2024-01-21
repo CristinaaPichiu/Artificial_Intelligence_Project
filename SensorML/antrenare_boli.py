@@ -22,11 +22,13 @@ df.fillna('Unknown', inplace=True)
 label_encoder = LabelEncoder()
 # Codificarea coloanei țintă
 y = label_encoder.fit_transform(df['Disease'])
+print(y)
 
 # Separarea caracteristicilor de intrare și a etichetelor
 X = df.drop('Disease', axis=1)
 text_columns = X.select_dtypes(include=['object']).columns
 numeric_columns = X.select_dtypes(exclude=['object']).columns
+
 # Construirea preprocesorului cu OneHotEncoder pentru coloanele textuale și StandardScaler pentru cele numerice
 preprocessor = ColumnTransformer(transformers=[
     ('num', StandardScaler(), numeric_columns),

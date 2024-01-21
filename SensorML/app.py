@@ -25,6 +25,7 @@ def models():
 def prediction():
     return render_template('prediction.html')
 
+
 @app.route('/predict', methods=['POST'])
 def predict():
     # Collect form data
@@ -49,7 +50,18 @@ def predict():
 
     # Set variables for template rendering
     selected_attributes = input_data
-    disease = 'Există un risc ridicat de boală la roșii.' if prediction == 1 else 'Riscul de boală la roșii este scăzut.'
+    if prediction == 2:
+        disease = 'Există un risc ridicat de boală la roșii pentru boala Late Blight'
+    elif prediction == 0:
+        disease = 'Există un risc ridicat de boală la roșii pentru boala Early Blight'
+    elif prediction == 4:
+        disease = 'Există un risc ridicat de boală la roșii pentru boala Powdery Milldew'
+    elif prediction == 1:
+        disease = 'Există un risc ridicat de boală la roșii pentru boala Gray Mold'
+    elif prediction == 3:
+        disease = 'Există un risc ridicat de boală la roșii pentru boala Leaf Mold'
+    else:
+        disease = 'Riscul de boală la roșii este scăzut.'
 
     # Render the template with the variables
     return render_template('prediction.html', selected_attributes=selected_attributes, disease=disease)
@@ -95,18 +107,17 @@ def show_chart_RN(parameter_type):
 
 @app.route('/show_chart_Seq2Seq/<parameter_type>', methods=['GET'])
 def show_chart_Seq2Seq(parameter_type):
-    image_path = "images/"+return_pathSeq2Seq(parameter_type)
+    image_path = "images/" + return_pathSeq2Seq(parameter_type)
     print(image_path)
     return render_template('image.html', image_path=image_path)
 
 
 @app.route('/show_chart_prophet/<parameter_type>', methods=['GET'])
 def show_chart_prophet(parameter_type):
-    image_path = "images/"+return_path_prophet(parameter_type)
+    image_path = "images/" + return_path_prophet(parameter_type)
     print(image_path)
     return render_template('image.html', image_path=image_path)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
