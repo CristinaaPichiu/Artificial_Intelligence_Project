@@ -1,17 +1,36 @@
 .image-container {
     display: flex;
     justify-content: center;
+
 }
+@media (min-width: 992px) { /* Pentru ecrane mari */
+    .bigger-and-left {
+        transform: translateX(-20%);
+        width: 120%;
+    }
+}
+
+@media (max-width: 991px) { /* Pentru ecrane mai mici */
+    .bigger-and-left {
+        transform: translateX(-10%);
+        width: 100%; /* Sau orice procentaj corespunzător pentru ecrane mai mici */
+    }
+}
+
+
 
 .centered-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
+.disease-btn:hover, .models-btn:hover, .prediction-btn:hover {
+    background-color: #dc3545; /* Culoarea roșie pentru hover */
+    color: white;
+}
 .disease-btn, .models-btn, .prediction-btn {
     border: none;
-    background-color: #007bff;
+    background-color: #343a40; /* Culoarea gri specifică navbar-ului */
     color: white;
     padding: 10px 20px;
     cursor: pointer;
@@ -24,10 +43,6 @@
     border-radius: 12px;
 }
 
-.disease-btn:hover, .models-btn:hover, .prediction-btn:hover {
-    background-color: #0056b3;
-    color: white;
-}
 
 @media (max-width: 768px) {
     .disease-btn, .models-btn, .prediction-btn {

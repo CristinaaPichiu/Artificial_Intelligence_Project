@@ -5,6 +5,21 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <style>
+        /* Adaugăm un stil CSS personalizat pentru a schimba culoarea butoanelor pe hover */
+        .btn:hover {
+            background-color: #dc3545; /* Culoarea roșie de hover */
+            border-color: #dc3545;
+        }
+
+        /* Adaugăm stiluri pentru a incadra butoanele intr-un dreptunghi */
+        .button-container {
+            background-color: #d3d3d3; /* Gri pastelat pentru culoarea de fundal */
+            border-radius: 10px; /* Rotunjimea marginilor */
+            padding: 20px; /* Spatiul interior al dreptunghiului */
+
+
+    </style>
     <title>Sensor Data Visualization - Graphic</title>
 </head>
 <body>
@@ -12,14 +27,17 @@
         <span class="navbar-brand mb-0 h1">Sensor Data Visualization</span>
     </nav>
 
-    <div class="container mt-4"> <!-- Adăugat clasa container și margin top -->
+    <div class="container mt-4">
         <div class="row">
-            <div class="col-12 text-center"> <!-- Clasa col-12 pentru full width pe toate dispozitivele -->
-                <img src="../static/images/SensorML.png" alt="banner" class="img-fluid"> <!-- Clasa img-fluid pentru a face imaginea responsive -->
-                <div class="centered-btn">
-                    <button onclick="window.location.href='/disease'" class="btn disease-btn my-2">Conditii optime de dezvoltare a bolilor</button>
-                    <button onclick="window.location.href='/models'" class="btn models-btn my-2">Evolutie parametri de mediu in timp</button>
-                    <button onclick="window.location.href='/prediction'" class="btn prediction-btn my-2">Riscul de boala</button>
+            <div class="col-md-6">
+                <img src="../static/images/imgggg.png" alt="banner" class="img-fluid img-lg bigger-and-left"> <!-- Ajustat pentru a muta imaginea mai la stânga și a o face mai mare -->
+            </div>
+            <div class="col-md-6 text-center d-flex flex-column justify-content-center mt-4">
+                <h1 class="sensor-data-viz mb-4">Vizualizarea datelor</h1>
+                <div class="button-container">
+                    <button onclick="window.location.href='/disease'" class="btn btn-dark disease-btn my-2">Conditii optime de dezvoltare a bolilor</button>
+                    <button onclick="window.location.href='/models'" class="btn btn-dark models-btn my-2">Evolutie parametri de mediu in timp</button>
+                    <button onclick="window.location.href='/prediction'" class="btn btn-dark prediction-btn my-2">Riscul de boala</button>
                 </div>
             </div>
         </div>
