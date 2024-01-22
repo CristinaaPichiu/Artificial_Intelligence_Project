@@ -3,16 +3,15 @@ import matplotlib.pyplot as plt
 import os
 
 def generate_bar_charts(file_path, output_directory='static/images'):
-    # Verifică dacă directorul de ieșire există și, dacă nu, îl creează
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    # Încarcă datele din fișierul CSV
+    # Se încarcă datele din fișierul CSV
     data = pd.read_csv(file_path)
 
     diseases = data['Disease']
     temp1 = data['Air Temperature [°C]']
-    temp2 = data['Unnamed: 2']  # Ajustează denumirea coloanei corespunzător
+    temp2 = data['Unnamed: 2']
     hum1 = data['AirHumidity [%rh]']
     hum2 = data['Unnamed: 4']
 

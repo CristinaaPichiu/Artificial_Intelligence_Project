@@ -38,13 +38,13 @@ def function_Seq2Seq(df, column):
 
     # Encoder
     encoder_inputs = tf.keras.layers.Input(shape=(input_sequence_length, input_dim))
-    encoder_lstm = tf.keras.layers.LSTM(100, return_state=True)
+    encoder_lstm = tf.keras.layers.LSTM(50, return_state=True)
     encoder_outputs, state_h, state_c = encoder_lstm(encoder_inputs)
     encoder_states = [state_h, state_c]
 
     # Decoder
     decoder_inputs = tf.keras.layers.Input(shape=(output_sequence_length, input_dim))  # Ajustează această linie
-    decoder_lstm = tf.keras.layers.LSTM(100, return_sequences=True, return_state=True)
+    decoder_lstm = tf.keras.layers.LSTM(50, return_sequences=True, return_state=True)
     decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
     decoder_dense = tf.keras.layers.Dense(output_dim, activation='linear')
     decoder_outputs = decoder_dense(decoder_outputs)
