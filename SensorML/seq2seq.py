@@ -13,8 +13,8 @@ from read_csv import load_and_clean_data
 def create_sequences(data, input_sequence_length, output_sequence_length):
     X, y = [], []
     for i in range(len(data) - input_sequence_length - output_sequence_length + 1):
-        X.append(data[i:(i + input_sequence_length), 0])  # Modificare aici
-        y.append(data[(i + input_sequence_length):(i + input_sequence_length + output_sequence_length)])
+        X.append(data[i:(i + input_sequence_length), 0].reshape(input_sequence_length, 1))
+        y.append(data[(i + input_sequence_length):(i + input_sequence_length + output_sequence_length), 0].reshape(output_sequence_length, 1))
     return np.array(X), np.array(y)
 
 def function_Seq2Seq(df, column):
@@ -33,8 +33,8 @@ def function_Seq2Seq(df, column):
     X, y = create_sequences(data_normalized, input_sequence_length, output_sequence_length)
 
     # Dimensiunile input și output
-    input_dim = 24  # Modificare aici
-    output_dim = y.shape[2]
+    input_dim = 1  # Există o singură caracteristică per pas de timp
+    output_dim = 1  # Există o singură caracteristică de ieșire pentru fiecare pas de timp în secvența de ieșire
 
     # Encoder
     encoder_inputs = tf.keras.layers.Input(shape=(input_sequence_length, input_dim))
@@ -43,12 +43,11 @@ def function_Seq2Seq(df, column):
     encoder_states = [state_h, state_c]
 
     # Decoder
-    decoder_inputs = tf.keras.layers.Input(shape=(output_sequence_length, output_dim))
+    decoder_inputs = tf.keras.layers.Input(shape=(output_sequence_length, input_dim))  # Ajustează această linie
     decoder_lstm = tf.keras.layers.LSTM(100, return_sequences=True, return_state=True)
     decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
     decoder_dense = tf.keras.layers.Dense(output_dim, activation='linear')
     decoder_outputs = decoder_dense(decoder_outputs)
-
     # Modelul Seq2Seq
     model = tf.keras.models.Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
@@ -59,7 +58,7 @@ def function_Seq2Seq(df, column):
     model.compile(optimizer='adam', loss='mean_squared_error')
 
     # Antrenarea modelului
-    history = model.fit([X, y], y, epochs=5, batch_size=32, validation_split=0.2)
+    history = model.fit([X, np.zeros((X.shape[0], output_sequence_length, input_dim))], y, epochs=5, batch_size=32, validation_split=0.2)
 
     # Generarea predicțiilor
     decoder_input = np.zeros((X.shape[0], output_sequence_length, output_dim))
@@ -81,12 +80,14 @@ def function_Seq2Seq(df, column):
 
         # Crearea graficului
         plt.figure(figsize=(12, 6))
-        plt.plot(time_steps, true_sequence, label='Actual')
-        plt.plot(time_steps, predicted_sequence, label='Predicted')
-        plt.title(f'Evoluția coloanei {column} în timp')
-        plt.xlabel('Time Step')
-        plt.ylabel('Value')
-        plt.legend()
+        plt.plot(time_steps, true_sequence, label='Actual', linewidth=2)  # Linii mai groase
+        plt.plot(time_steps, predicted_sequence, label='Predicted', linewidth=2)
+        plt.title(f'Evoluția coloanei {column} în timp', fontsize=14)  # Titlu lizibil
+        plt.xlabel('Time Step', fontsize=12)
+        plt.ylabel('Value', fontsize=12)
+        plt.legend(fontsize=12)
+        plt.grid(True)  # Adăugarea unei grile
+        plt.tight_layout()  # Asigură-te că totul se încadrează bine
 
         # Salvarea imaginii
         image_path = f'static/images/{column}_Seq2Seq.png'
